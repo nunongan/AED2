@@ -17,6 +17,7 @@ typedef struct sets // Definir Estrutura dos Conjutos
     char *tema;
 
     struct sets *anterior, *proximo, *ultimo, *primeiro;
+
 } Sets;
 
 typedef struct parts //
@@ -34,7 +35,7 @@ typedef struct parts_sets // Relação de quantas peças é preciso para fazer u
 {
 
     char *set_num;
-    int quantity;
+    int quantidade;
     char *part_num;
 
     struct parts_sets *anterior, *proximo, *ultimo, *primeiro;
@@ -85,7 +86,7 @@ PartsSets *criarListaPartSets(char *set_num, int quantidade, char *part_num)
     PartsSets *list = (PartsSets *)malloc(sizeof(PartsSets));
 
     list->set_num = strdup(set_num);
-    list->quantity = quantity;
+    list->quantidade = quantidade;
     list->part_num = strdup(part_num);
     list->proximo = NULL;
     list->anterior = NULL;
@@ -138,11 +139,11 @@ PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantidade, c
 
 // ==================================================================================================================
 
-Sets * setLista;
-Parts * partsLista;
+Sets * SetLista;
+Parts * PartsLista;
 PartsSets * partSetLista;
 
-Sets *loadS(char *PATH)
+Sets *carregarSets(char *PATH)
 {
 
     Sets *SetsLista;
@@ -202,13 +203,128 @@ Sets *loadS(char *PATH)
         return NULL;
 }
 
+Sets *carregarParts(char *PATH)
+{
 
+    Sets *PartsLista;
+
+
+
+
+    if (access(PATH, F_OK) == true)
+    {
+
+        FILE *PartsFicheiro = fopen(PATH, "r");
+        int contador = 0;
+
+        while (!feof(PartsFicheiro))
+        {
+
+            char num[500];
+            char nome[500];
+            char classe[500];
+            int stock;
+            char linha[500];
+
+            fgets(linha, 500, PartsFicheiro);
+
+            if (feof(PartsFicheiro))
+            {
+
+                break;
+            }
+
+            if (contador >= 0)
+            {
+
+                sscanf(linha, "%|^\t |\t%|^\t|\t%|^\t|\t%|^t|%|^\t", num, nome, classe, stock);
+            }
+
+            if (contador == 0)
+            {
+
+                PartsLista = criarListaParts(num, nome, classe, stock);
+
+               // printf("Foi criada uma lista. %s - %d - %s", part_num, quantidade, set_num); 
+            }
+            else
+            {
+
+                PartsLista = Inserir_Parts(PartsLista, num, nome, classe, stock);
+            }
+
+            contador++;
+        }
+        fclose(PartsFicheiro);
+        return PartsFicheiro;
+    }
+    else
+
+        return NULL;
+}
+
+Sets *carregarPartsSets(char *PATH)
+{
+
+    Sets *PartsSetsLista;
+
+
+    if (access(PATH, F_OK) == true)
+    {
+
+        FILE *PartsSetsFicheiro = fopen(PATH, "r");
+        int contador = 0;
+
+        while (!feof(PartsSetsFicheiro))
+        {
+
+            char set_num[500];
+            int quantidade;
+            char part_num[500];
+            char linha[500];
+
+            fgets(linha, 500, PartsSetsFicheiro);
+
+            if (feof(PartsSetsFicheiro))
+            {
+
+                break;
+            }
+
+            if (contador >= 0)
+            {
+
+                sscanf(linha, "%|^\t |\t%|^\t|\t%|^\t|", set_num, quantidade, part_num);
+            }
+
+            if (contador == 0)
+            {
+
+                PartsSetsLista = criarListaPartSets(set_num, quantidade, part_num);
+
+               // printf("Foi criada uma lista. %s - %d - %s", part_num, quantidade, set_num);
+            }
+            else
+            {
+
+                PartsSetsLista = Inserir_PartSets(PartsSetsLista, num, nome, ano, classe,stock);
+            }
+
+            contador++;
+        }
+        fclose(PartsSetsFicheiro);
+        return PartsSetsFicheiro;
+    }
+    else
+
+        return NULL;
+}
 
 void main(){
 
-    setLista = loadS(".\DataSet\sets.tsv");
-    partsLista = loadS(".\DataSet\parts.tsv");
-    partSetLista = loadS(".\DataSet\parts_sets.tsv");
+    setLista = carregarSets("./DataSet/sets.tsv");
+    partsLista = carregarParts("./DataSet/parts.tsv");
+    partSetLista = carregarPartsSets("./DataSet/parts_sets.tsv");
     printf("hello\n");  
 
 }
@@ -307,7 +423,7 @@ void totalPecasStock(){
 
 void pecasIncluidasNumConjunto(){
 
-    char codConjunto [500];
+    char * codConjunto [500];
 
     printf("Introduza o Conjunto: ");
     gets(codConjunto);
@@ -355,7 +471,7 @@ void alterarStockPeca(){
 
 void removerPecasClasse(){
 
-    char temp_class [500];
+    char * temp_class [500];
 
     Parts * aux = partsLista;
 
@@ -379,7 +495,7 @@ void removerPecasClasse(){
 void removerSetsTema(){
 
 
-    char temp_tema[500];
+    char * temp_tema[500];
 
     printf("Introduza o tema: ");
     gets(temp_tema);
