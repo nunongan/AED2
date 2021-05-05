@@ -344,7 +344,7 @@ void listarConjuntoDeDeterminadoTema(){
     }
 
     // FALTA ORDENAR
-    
+    aux= aux->proximo;
     }   
 }
 
@@ -372,10 +372,14 @@ void listarPecasNumDeterminadoConjunto(){
                 if(strcmp(aux2->part_num, aux->psPart_num) == 0 && strcmp(aux2->part_classe, classe) == 0) {
         
                 printf("%s", aux->psPart_num);
-    
+
+                
                 }
+                aux2 = aux2->proximo;
             }
+
         }
+        aux = aux->proximo;
     }
 }
 
@@ -402,9 +406,11 @@ void pecasNecessariasParaConstruir(){
 
                 }
 
+                aux1 = aux1->proximo;
             }
 
         }
+        aux2 = aux2->proximo;
     }
 }
 
@@ -432,7 +438,7 @@ void pecasIncluidasNumConjunto(){
             total += aux-> quantidade;
 
         }
-
+        aux = aux->proximo;
     }
 
     printf("Total de pecas: %d",total);
@@ -480,6 +486,7 @@ void removerPecasClasse(){
             aux->proximo->anterior = aux->anterior;
             free(temp);
         }
+        aux = aux->proximo;
     }
 
 }
@@ -504,6 +511,7 @@ void removerSetsTema(){
                 aux->proximo->anterior = aux-> anterior;
                 free(temp);
         }
+        aux = aux->proximo;
     }
 }
 
@@ -529,11 +537,13 @@ void AdicaoStockIdConjunto(){
             while(aux){
 
                 aux->part_stock += quantidade;
-                
+
+             aux = aux ->proximo;   
             }
 
         }
 
+        aux1 = aux1->proximo;
     }
 
 
@@ -562,10 +572,13 @@ void construirConstruirStockExistente(){
                             printf("%s",aux->psSet_num);
                             break;
                         }
+                        aux2 = aux2->proximo;
                     }
                 }
             }
+            aux1 = aux1->proximo;
         }
+        aux = aux->proximo;
     }
 }
 // ==================================================================================================================
