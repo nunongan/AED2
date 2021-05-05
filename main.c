@@ -9,34 +9,36 @@ int nParts = 0;
 
 // ==================================================== STRUCTS ====================================================
 
-typedef struct sets // Definir Estrutura dos Conjutos
+typedef struct sets
 {
-    char *num;
-    char *nome;
+    
+    char *set_id;
+    char *set_nome;
     int ano;
-    char *tema;
+    char * tema;
 
     struct sets *anterior, *proximo, *ultimo, *primeiro;
 
 } Sets;
 
-typedef struct parts //
+typedef struct part //
 {
 
-    char *num;
-    char *nome;
-    char *classe;
+    char *part_num;
+    char *part_nome;
+    char * classe;
     int stock;
 
-    struct parts *anterior, *proximo, *ultimo, *primeiro;
-} Parts;
+    struct part *anterior, *proximo, *ultimo, *primeiro;
 
-typedef struct parts_sets // Relação de quantas peças é preciso para fazer um conjunto
+} Part;
+
+typedef struct parts_sets
 {
 
-    char *set_num;
+    char *ps_num;
     int quantidade;
-    char *part_num;
+    char *ps_num;
 
     struct parts_sets *anterior, *proximo, *ultimo, *primeiro;
 
@@ -46,12 +48,12 @@ typedef struct parts_sets // Relação de quantas peças é preciso para fazer u
 
 // ===================================================== LISTS ======================================================
 
-Sets *criarListaSets(char *num, char *nome, int ano, char *tema)
+Sets * criarListaSets(char * set_id, char * set_nome, int set_ano, char * set_tema)
 {
 
-    Sets *list = (Sets *)malloc(sizeof(Sets));
-    list->num = strdup(num);
-    list->nome = strdup(nome);
+    Sets * list = (Sets *)malloc(sizeof(Sets));
+    list->set_id = strdup(set_id);
+    list->set_nome = strdup(set_nome);
     list->ano = ano;
     list->tema = strdup(tema);
     list->proximo = NULL;
@@ -62,12 +64,12 @@ Sets *criarListaSets(char *num, char *nome, int ano, char *tema)
     return list;
 }
 
-Parts *criarListaParts(char *num, char *nome, char *classe, int stock)
+Parts *criarListaParts(char *part_num, char * part_nome, char * part_classe, int part_stock)
 {
 
     Parts *list = (Parts *)malloc(sizeof(Parts));
-    list->num = strdup(num);
-    list->nome = strdup(nome);
+    list->part_num = strdup(part_num);
+    list->part_nome = strdup(part_nome);
     list->classe = strdup(classe);
     list->stock = stock;
     list->proximo = NULL;
@@ -80,7 +82,7 @@ Parts *criarListaParts(char *num, char *nome, char *classe, int stock)
     return list;
 }
 
-PartsSets *criarListaPartSets(char *set_num, int quantidade, char *part_num)
+PartsSets *criarListaPartSets(char *psSet_num, int quantidade, char * psPart_num)
 {
 
     PartsSets *list = (PartsSets *)malloc(sizeof(PartsSets));
@@ -96,11 +98,11 @@ PartsSets *criarListaPartSets(char *set_num, int quantidade, char *part_num)
     return list;
 }
 
-Sets * Inserir_Sets (Sets * list, char *set_num, char * set_nome, int ano, char * tema){
+Sets * Inserir_Sets (Sets * list, char *set_id, char * set_nome, int set_ano, char * set_tema){
 
     assert(list);
 
-    list->ultimo->proximo = criarListaSets(set_num,set_nome,ano,tema);
+    list->ultimo->proximo = criarListaSets(set_id,set_nome,set_ano,set_tema);
     list->ultimo->proximo->anterior = list->ultimo;
     list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
@@ -109,12 +111,12 @@ Sets * Inserir_Sets (Sets * list, char *set_num, char * set_nome, int ano, char 
 
 }
 
-Parts * Inserir_Parts(Parts * list, char *part_num, char * part_nome, char * part_classe, int stock){
+Parts * Inserir_Parts(Parts * list, char *part_num, char * part_nome, char * part_classe, int part_stock){
 
     assert(list);
 
 
-    list->ultimo->proximo = criarListaParts(part_num,part_nome,part_classe,stock);
+    list->ultimo->proximo = criarListaParts(part_num,part_nome,part_classe,part_stock);
     list->ultimo->proximo->anterior = list->ultimo;
     list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
@@ -122,12 +124,12 @@ Parts * Inserir_Parts(Parts * list, char *part_num, char * part_nome, char * par
     return list;
 }
 
-PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantidade, char * part_num){
+PartsSets * Inserir_PartSets(PartsSets * list, char * psSet_num, int quantidade, char * psPart_num){
 
 
     assert(list);
 
-    list->ultimo->proximo = criarListaPartSets(set_num, quantidade ,part_num);
+    list->ultimo->proximo = criarListaPartSets(psSet_num, quantidade, psPart_num);
     list->ultimo->proximo->anterior = list->ultimo;
     list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
@@ -139,14 +141,14 @@ PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantidade, c
 
 // ==================================================================================================================
 
-Sets * SetLista;
-Parts * PartsLista;
+Sets * setsLista;
+Parts * partsLista;
 PartsSets * partSetLista;
 
 Sets *carregarSets(char *PATH)
 {
 
-    Sets *SetsLista;
+    Sets *setsLista;
 
 
 
@@ -154,10 +156,10 @@ Sets *carregarSets(char *PATH)
     if (access(PATH, F_OK) == true)
     {
 
-        FILE *SetsFile = fopen(PATH, "r");
+        FILE *SetsFicheiro = fopen(PATH, "r");
         int contador = 0;
 
-        while (!feof(SetsFile))
+        while (!feof(SetsFicheiro))
         {
 
             char num[500];
@@ -166,9 +168,9 @@ Sets *carregarSets(char *PATH)
             char tema[500];
             char linha[500];
 
-            fgets(linha, 500, SetsFile);
+            fgets(linha, 500, SetsFicheiro);
 
-            if (feof(SetsFile))
+            if (feof(SetsFicheiro))
             {
 
                 break;
@@ -183,30 +185,30 @@ Sets *carregarSets(char *PATH)
             if (contador == 0)
             {
 
-                SetsLista = criarListaSets(num, nome, ano, tema);
+                setsLista = criarListaSets(num, nome, ano, tema);
 
                // printf("Foi criada uma lista. %s - %d - %s", part_num, quantidade, set_num);
             }
             else
             {
 
-                SetsLista = Inserir_Sets(SetsLista, num, nome, ano, tema);
+                setsLista = Inserir_Sets(setsLista, num, nome, ano, tema);
             }
 
             contador++;
         }
-        fclose(SetsFile);
-        return SetsLista;
+        fclose(SetsFicheiro);
+        return setsLista;
     }
     else
 
         return NULL;
 }
 
-Sets *carregarParts(char *PATH)
+Parts *carregarParts(char *PATH)
 {
 
-    Sets *PartsLista;
+    Parts *partsLista;
 
 
 
@@ -243,30 +245,30 @@ Sets *carregarParts(char *PATH)
             if (contador == 0)
             {
 
-                PartsLista = criarListaParts(num, nome, classe, stock);
+                partsLista = criarListaParts(num, nome, classe, stock);
 
                // printf("Foi criada uma lista. %s - %d - %s", part_num, quantidade, set_num); 
             }
             else
             {
 
-                PartsLista = Inserir_Parts(PartsLista, num, nome, classe, stock);
+                partsLista = Inserir_Parts(partsLista, num, nome, classe, stock);
             }
 
             contador++;
         }
         fclose(PartsFicheiro);
-        return PartsFicheiro;
+        return partsLista;
     }
     else
 
         return NULL;
 }
 
-Sets *carregarPartsSets(char *PATH)
+PartsSets *carregarPartsSets(char *PATH)
 {
 
-    Sets *PartsSetsLista;
+    PartsSets *PartsSetsLista;
 
 
     if (access(PATH, F_OK) == true)
@@ -307,13 +309,13 @@ Sets *carregarPartsSets(char *PATH)
             else
             {
 
-                PartsSetsLista = Inserir_PartSets(PartsSetsLista, num, nome, ano, classe,stock);
+                PartsSetsLista = Inserir_PartSets(PartsSetsLista, set_num, quantidade, part_num);
             }
 
             contador++;
         }
         fclose(PartsSetsFicheiro);
-        return PartsSetsFicheiro;
+        return PartsSetsLista;
     }
     else
 
@@ -322,7 +324,7 @@ Sets *carregarPartsSets(char *PATH)
 
 void main(){
 
-    setLista = carregarSets("./DataSet/sets.tsv");
+    setsLista = carregarSets("./DataSet/sets.tsv");
     partsLista = carregarParts("./DataSet/parts.tsv");
     partSetLista = carregarPartsSets("./DataSet/parts_sets.tsv");
     printf("hello\n");  
@@ -332,18 +334,18 @@ void main(){
 
 void listarConjuntoDeDeterminadoTema(){
 
-    char tema[500];
+    char * tema;
 
     printf("Introduza o tema: ");
-    gets("%s", tema);
+    gets(tema);
 
-    Sets * aux = setLista;
+    Sets * aux = setsLista;
 
     while(aux){
 
-    if(strcmp(aux->tema, tema) == 0){
+    if(strcmp(aux->set_tema, tema) == 0){
 
-        printf("%s\n", aux->tema);
+        printf("%s\n", aux->set_tema);
 
     } else {
 
@@ -358,15 +360,15 @@ void listarConjuntoDeDeterminadoTema(){
 void listarPecasNumDeterminadoConjunto(){
 
 
-    char * codConjunto[500];
-    char * classe[500];
+    char * codConjunto;
+    char * classe;
 
     printf("Introduza o conjunto pretendido: ");
     gets(codConjunto);
     printf("Introduza o tipo da peca: ");
     gets(classe);
 
-    Parts * aux = partsLista;
+    PartsSets * aux = partSetLista;
 
     while(aux){
 
@@ -388,7 +390,7 @@ void listarPecasNumDeterminadoConjunto(){
 
 void pecasNecessariasParaConstruir(){ 
 
-    char * codConjunto[500];
+    char * codConjunto;
 
     printf("Insira o conjunto: ");
     gets(codConjunto);
@@ -402,10 +404,10 @@ void pecasNecessariasParaConstruir(){
 
             while (aux1){
 
-                if(strcmp(aux1->part_num, aux2->part_num) == 0){
+                if(strcmp(aux1->num, aux2->part_num) == 0){
 
 
-                 printf("Num: %s || Nome: %s || Classe: %s || Stock: %d || Quantidade p/ construir: %d \n\n",aux1->part_num, aux1->part_nome,aux1->classe,aux1->stock,aux2->quantidade);
+                 printf("Num: %s || Nome: %s || Classe: %s || Stock: %d || Quantidade p/ construir: %d \n\n",aux1->num, aux1->nome,aux1->classe,aux1->stock,aux2->quantidade);
 
                 }
 
@@ -423,7 +425,7 @@ void totalPecasStock(){
 
 void pecasIncluidasNumConjunto(){
 
-    char * codConjunto [500];
+    char * codConjunto;
 
     printf("Introduza o Conjunto: ");
     gets(codConjunto);
@@ -448,7 +450,7 @@ void pecasIncluidasNumConjunto(){
 
 void alterarStockPeca(){
 
-    char codPeca [500];
+    char * codPeca;
     int quantidade;
 
     printf("Digite o codigo da peca: ");
@@ -460,7 +462,7 @@ void alterarStockPeca(){
     printf("Resposta: ");
     scanf("%d", &quantidade);
 
-    if(strcmp(aux->part_num, codPeca)){
+    if(strcmp(aux->num, codPeca)){
 
         aux-> stock = quantidade;
 
@@ -471,10 +473,10 @@ void alterarStockPeca(){
 
 void removerPecasClasse(){
 
-    char * temp_class [500];
+    char * temp_class;
 
     Parts * aux = partsLista;
-
+    
     printf("Introduza a classe que deseja remover: ");
     gets(temp_class);
 
@@ -482,7 +484,7 @@ void removerPecasClasse(){
 
         if(strcmp(aux->classe,temp_class)){
 
-            partsLista * temp = aux;
+            Parts * temp = aux;
             aux->anterior->proximo = aux->proximo;
             aux->proximo->anterior = aux->anterior;
             free(temp);
@@ -491,32 +493,90 @@ void removerPecasClasse(){
 
 }
 
-
 void removerSetsTema(){
 
 
-    char * temp_tema[500];
+    char * temp_tema;
 
     printf("Introduza o tema: ");
     gets(temp_tema);
 
-    Sets * aux = SetsLista;
+    Sets * aux = setsLista;
     
     while(aux){
 
 
         if(strcmp(aux->tema,temp_tema)){
 
-            SetsLista * temp = aux;
+            Sets * temp = aux;
                 aux->anterior->proximo = aux-> proximo;
                 aux->proximo->anterior = aux-> anterior;
                 free(temp);
         }
     }
+}
+
+void AdicaoStockIdConjunto(){
+
+    char * codConjunto;
+    int quantidade;
+
+    printf("Introduza o codigo do conjunto: ");
+    gets(codConjunto);
+    printf("Qual sera o novo stock: ");
+    scanf("%d", &quantidade);
+
+    
+    Parts * aux = partsLista;
+
+    PartsSets * aux1 = partSetLista;
+
+    while(aux1){
+
+        if(strcmp(aux1->set_num, codConjunto)== 0){
+
+            while(aux){
+
+                aux->stock += quantidade;
+                
+            }
+
+        }
+
+    }
 
 
 }
 
+void construirConstruirStockExistente(){
+
+    PartsSets * aux = partSetLista;
+    Parts * aux1 = partsLista;
+    Sets * aux2 = setsLista;
+
+    while (aux){
+
+        aux1 = aux1->primeiro;
+
+        while(aux1){
+
+            if(strcmp(aux->part_num,aux1->num)){
+
+                if(aux1->stock >= aux->quantidade){
+                    
+                    while(aux2){
+
+                        if(aux->set_num,aux2->num){
+
+                            printf("%s",aux->set_num);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 // ==================================================================================================================
 
 
