@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-typedef struct sets
+typedef struct sets // Definir Estrutura dos Conjutos
 {
     char *num;
     char *nome;
@@ -15,7 +15,7 @@ typedef struct sets
     struct sets *anterior, *proximo, *ultimo, *primeiro;
 } Sets;
 
-typedef struct parts
+typedef struct parts //
 {
 
     char *num;
@@ -26,7 +26,7 @@ typedef struct parts
     struct parts *anterior, *proximo, *ultimo, *primeiro;
 } Parts;
 
-typedef struct parts_sets
+typedef struct parts_sets // Relação de quantas peças é preciso para fazer um conjunto
 {
 
     char *set_num;
@@ -91,7 +91,7 @@ Sets * Inserir_Sets (Sets * list, char *num, char * nome, int ano, char * tema){
 
     list->ultimo->proximo = criarListaSets(num,nome,ano,tema);
     list->ultimo->proximo->anterior = list->ultimo;
-    list->ultimo->proximo->primeiro = list->ultimo->primeiro;
+    list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
 
     return list;
@@ -105,7 +105,7 @@ Parts * Inserir_Parts(Parts * list, char *num, char * nome, char * classe, int s
 
     list->ultimo->proximo = criarListaParts(num,nome,classe,stock);
     list->ultimo->proximo->anterior = list->ultimo;
-    list->ultimo->proximo->primeiro = list->ultimo->primeiro;
+    list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
 
 
@@ -119,11 +119,40 @@ PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantity, cha
 
     list->ultimo->proximo = criarListaPartSets(set_num,quantity,part_num);
     list->ultimo->proximo->anterior = list->ultimo;
-    list->ultimo->proximo->primeiro = list->ultimo->primeiro;
+    list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
 
 
     return list;
+
+}
+
+
+
+
+void listarConjuntoDeDeterminadoTema{
+
+    char tema[500];
+
+    printf("Introduza o tema: ");
+    scanf("%s", tema);
+
+    cria
+    
+
+
+
+
+
+}
+
+void listarPecasNumDeterminadoConjunto{
+
+
+    char idConjunto[500];
+    char idPeca[500];
+
+
 
 }
 
@@ -188,6 +217,11 @@ Sets *loadS(char *PATH)
 
         return NULL;
 }
+
+
+
+
+
 
 
 
