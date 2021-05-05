@@ -12,10 +12,10 @@ int nParts = 0;
 typedef struct sets
 {
     
-    char *set_id;
+    char *set_num;
     char *set_nome;
-    int ano;
-    char * tema;
+    int set_ano;
+    char * set_tema;
 
     struct sets *anterior, *proximo, *ultimo, *primeiro;
 
@@ -26,8 +26,8 @@ typedef struct part //
 
     char *part_num;
     char *part_nome;
-    char * classe;
-    int stock;
+    char * part_classe;
+    int part_stock;
 
     struct part *anterior, *proximo, *ultimo, *primeiro;
 
@@ -36,9 +36,9 @@ typedef struct part //
 typedef struct parts_sets
 {
 
-    char *ps_num;
+    char * psSet_num;
     int quantidade;
-    char *ps_num;
+    char * psPart_num;
 
     struct parts_sets *anterior, *proximo, *ultimo, *primeiro;
 
@@ -48,14 +48,14 @@ typedef struct parts_sets
 
 // ===================================================== LISTS ======================================================
 
-Sets * criarListaSets(char * set_id, char * set_nome, int set_ano, char * set_tema)
+Sets * criarListaSets(char * set_num, char * set_nome, int set_ano, char * set_tema)
 {
 
     Sets * list = (Sets *)malloc(sizeof(Sets));
-    list->set_id = strdup(set_id);
+    list->set_num = strdup(set_num);
     list->set_nome = strdup(set_nome);
-    list->ano = ano;
-    list->tema = strdup(tema);
+    list->set_ano = set_ano;
+    list->set_tema = strdup(set_tema);
     list->proximo = NULL;
     list->anterior = NULL;
     list->ultimo = list;
@@ -64,20 +64,20 @@ Sets * criarListaSets(char * set_id, char * set_nome, int set_ano, char * set_te
     return list;
 }
 
-Parts *criarListaParts(char *part_num, char * part_nome, char * part_classe, int part_stock)
+Part * criarListaParts(char *part_num, char * part_nome, char * part_classe, int part_stock)
 {
 
-    Parts *list = (Parts *)malloc(sizeof(Parts));
+    Part *list = (Part *)malloc(sizeof(Part));
     list->part_num = strdup(part_num);
     list->part_nome = strdup(part_nome);
-    list->classe = strdup(classe);
-    list->stock = stock;
+    list->part_classe = strdup(part_classe);
+    list->part_stock = part_stock;
     list->proximo = NULL;
     list->anterior = NULL;
     list->ultimo = list;
     list->primeiro = list;
 
-    nParts += stock;
+    nParts += part_stock;
 
     return list;
 }
@@ -87,9 +87,9 @@ PartsSets *criarListaPartSets(char *psSet_num, int quantidade, char * psPart_num
 
     PartsSets *list = (PartsSets *)malloc(sizeof(PartsSets));
 
-    list->set_num = strdup(set_num);
+    list->psSet_num = strdup(psSet_num);
     list->quantidade = quantidade;
-    list->part_num = strdup(part_num);
+    list->psPart_num = strdup(psPart_num);
     list->proximo = NULL;
     list->anterior = NULL;
     list->ultimo = list;
@@ -111,7 +111,7 @@ Sets * Inserir_Sets (Sets * list, char *set_id, char * set_nome, int set_ano, ch
 
 }
 
-Parts * Inserir_Parts(Parts * list, char *part_num, char * part_nome, char * part_classe, int part_stock){
+Part * Inserir_Parts(Part * list, char *part_num, char * part_nome, char * part_classe, int part_stock){
 
     assert(list);
 
@@ -142,7 +142,7 @@ PartsSets * Inserir_PartSets(PartsSets * list, char * psSet_num, int quantidade,
 // ==================================================================================================================
 
 Sets * setsLista;
-Parts * partsLista;
+Part * partsLista;
 PartsSets * partSetLista;
 
 Sets *carregarSets(char *PATH)
@@ -205,10 +205,10 @@ Sets *carregarSets(char *PATH)
         return NULL;
 }
 
-Parts *carregarParts(char *PATH)
+Part *carregarParts(char *PATH)
 {
 
-    Parts *partsLista;
+    Part *partsLista;
 
 
 
@@ -322,15 +322,6 @@ PartsSets *carregarPartsSets(char *PATH)
         return NULL;
 }
 
-void main(){
-
-    setsLista = carregarSets("./DataSet/sets.tsv");
-    partsLista = carregarParts("./DataSet/parts.tsv");
-    partSetLista = carregarPartsSets("./DataSet/parts_sets.tsv");
-    printf("hello\n");  
-
-}
-
 
 void listarConjuntoDeDeterminadoTema(){
 
@@ -372,15 +363,15 @@ void listarPecasNumDeterminadoConjunto(){
 
     while(aux){
 
-        if(strcmp(aux->set_num, codConjunto) == 0){
+        if(strcmp(aux->psSet_num, codConjunto) == 0){
         
-            Parts * aux2 = partsLista;
+            Part * aux2 = partsLista;
         
             while(aux2) {
         
-                if(strcmp(aux2->num, aux->part_num) == 0 && strcmp(aux2->classe, classe) == 0) {
+                if(strcmp(aux2->part_num, aux->psPart_num) == 0 && strcmp(aux2->part_classe, classe) == 0) {
         
-                printf("%s - %s", aux->part_num);
+                printf("%s", aux->psPart_num);
     
                 }
             }
@@ -395,19 +386,19 @@ void pecasNecessariasParaConstruir(){
     printf("Insira o conjunto: ");
     gets(codConjunto);
 
-    Parts * aux1 = partsLista; 
+    Part * aux1 = partsLista; 
     PartsSets * aux2 = partSetLista;
     
     while(aux2){
 
-        if(strcmp(aux2->set_num, codConjunto) == 0){
+        if(strcmp(aux2->psSet_num, codConjunto) == 0){
 
             while (aux1){
 
-                if(strcmp(aux1->num, aux2->part_num) == 0){
+                if(strcmp(aux1->part_num, aux2->psPart_num) == 0){
 
 
-                 printf("Num: %s || Nome: %s || Classe: %s || Stock: %d || Quantidade p/ construir: %d \n\n",aux1->num, aux1->nome,aux1->classe,aux1->stock,aux2->quantidade);
+                 printf("Num: %s || Nome: %s || Classe: %s || Stock: %d || Quantidade p/ construir: %d \n\n",aux1->part_num, aux1->part_nome,aux1->part_classe,aux1->part_stock,aux2->quantidade);
 
                 }
 
@@ -436,7 +427,7 @@ void pecasIncluidasNumConjunto(){
 
     while (aux){
 
-        if(strcmp(aux-> set_num, codConjunto) == 0){
+        if(strcmp(aux-> psSet_num, codConjunto) == 0){
 
             total += aux-> quantidade;
 
@@ -456,15 +447,15 @@ void alterarStockPeca(){
     printf("Digite o codigo da peca: ");
     gets(codPeca);
 
-    Parts * aux = partsLista;
+    Part * aux = partsLista;
 
     printf("Qual e o novo numero de pecas em stock?\n");
     printf("Resposta: ");
     scanf("%d", &quantidade);
 
-    if(strcmp(aux->num, codPeca)){
+    if(strcmp(aux->part_num, codPeca)){
 
-        aux-> stock = quantidade;
+        aux-> part_stock = quantidade;
 
     }
 
@@ -475,16 +466,16 @@ void removerPecasClasse(){
 
     char * temp_class;
 
-    Parts * aux = partsLista;
+    Part * aux = partsLista;
     
     printf("Introduza a classe que deseja remover: ");
     gets(temp_class);
 
     while (aux){
 
-        if(strcmp(aux->classe,temp_class)){
+        if(strcmp(aux->part_classe,temp_class)){
 
-            Parts * temp = aux;
+            Part * temp = aux;
             aux->anterior->proximo = aux->proximo;
             aux->proximo->anterior = aux->anterior;
             free(temp);
@@ -506,7 +497,7 @@ void removerSetsTema(){
     while(aux){
 
 
-        if(strcmp(aux->tema,temp_tema)){
+        if(strcmp(aux->set_tema,temp_tema)){
 
             Sets * temp = aux;
                 aux->anterior->proximo = aux-> proximo;
@@ -527,17 +518,17 @@ void AdicaoStockIdConjunto(){
     scanf("%d", &quantidade);
 
     
-    Parts * aux = partsLista;
+    Part * aux = partsLista;
 
     PartsSets * aux1 = partSetLista;
 
     while(aux1){
 
-        if(strcmp(aux1->set_num, codConjunto)== 0){
+        if(strcmp(aux1->psSet_num, codConjunto)== 0){
 
             while(aux){
 
-                aux->stock += quantidade;
+                aux->part_stock += quantidade;
                 
             }
 
@@ -551,7 +542,7 @@ void AdicaoStockIdConjunto(){
 void construirConstruirStockExistente(){
 
     PartsSets * aux = partSetLista;
-    Parts * aux1 = partsLista;
+    Part * aux1 = partsLista;
     Sets * aux2 = setsLista;
 
     while (aux){
@@ -560,15 +551,15 @@ void construirConstruirStockExistente(){
 
         while(aux1){
 
-            if(strcmp(aux->part_num,aux1->num)){
+            if(strcmp(aux->psPart_num,aux1->part_num)){
 
-                if(aux1->stock >= aux->quantidade){
+                if(aux1->part_stock >= aux->quantidade){
                     
                     while(aux2){
 
-                        if(aux->set_num,aux2->num){
+                        if(strcmp(aux->psSet_num,aux2->set_num)){
 
-                            printf("%s",aux->set_num);
+                            printf("%s",aux->psSet_num);
                             break;
                         }
                     }
@@ -639,3 +630,12 @@ int option;
 
 }
 */
+
+void main(){
+
+    setsLista = carregarSets("./DataSet/sets.tsv");
+    partsLista = carregarParts("./DataSet/parts.tsv");
+    partSetLista = carregarPartsSets("./DataSet/parts_sets.tsv");
+    printf("hello\n");  
+
+}
