@@ -79,7 +79,7 @@ Parts *criarListaParts(char *num, char *nome, char *classe, int stock)
     return list;
 }
 
-PartsSets *criarListaPartSets(char *set_num, int quantity, char *part_num)
+PartsSets *criarListaPartSets(char *set_num, int quantidade, char *part_num)
 {
 
     PartsSets *list = (PartsSets *)malloc(sizeof(PartsSets));
@@ -121,12 +121,12 @@ Parts * Inserir_Parts(Parts * list, char *part_num, char * part_nome, char * par
     return list;
 }
 
-PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantity, char * part_num){
+PartsSets * Inserir_PartSets(PartsSets * list, char * set_num, int quantidade, char * part_num){
 
 
     assert(list);
 
-    list->ultimo->proximo = criarListaPartSets(set_num, quantity ,part_num);
+    list->ultimo->proximo = criarListaPartSets(set_num, quantidade ,part_num);
     list->ultimo->proximo->anterior = list->ultimo;
     list->ultimo->proximo->primeiro = list;
     list->ultimo = list->ultimo->proximo;
@@ -305,13 +305,98 @@ void totalPecasStock(){
 
 }
 
-
 void pecasIncluidasNumConjunto(){
 
     char codConjunto [500];
 
     printf("Introduza o Conjunto: ");
-    gets("%s", codConjunto);
+    gets(codConjunto);
+
+    PartsSets * aux = partSetLista;
+    
+    int total;
+
+    while (aux){
+
+        if(strcmp(aux-> set_num, codConjunto) == 0){
+
+            total += aux-> quantidade;
+
+        }
+
+    }
+
+    printf("Total de pecas: %d",total);
+
+}
+
+void alterarStockPeca(){
+
+    char codPeca [500];
+    int quantidade;
+
+    printf("Digite o codigo da peca: ");
+    gets(codPeca);
+
+    Parts * aux = partsLista;
+
+    printf("Qual e o novo numero de pecas em stock?\n");
+    printf("Resposta: ");
+    scanf("%d", &quantidade);
+
+    if(strcmp(aux->part_num, codPeca)){
+
+        aux-> stock = quantidade;
+
+    }
+
+
+}
+
+void removerPecasClasse(){
+
+    char temp_class [500];
+
+    Parts * aux = partsLista;
+
+    printf("Introduza a classe que deseja remover: ");
+    gets(temp_class);
+
+    while (aux){
+
+        if(strcmp(aux->classe,temp_class)){
+
+            partsLista * temp = aux;
+            aux->anterior->proximo = aux->proximo;
+            aux->proximo->anterior = aux->anterior;
+            free(temp);
+        }
+    }
+
+}
+
+
+void removerSetsTema(){
+
+
+    char temp_tema[500];
+
+    printf("Introduza o tema: ");
+    gets(temp_tema);
+
+    Sets * aux = SetsLista;
+    
+    while(aux){
+
+
+        if(strcmp(aux->tema,temp_tema)){
+
+            SetsLista * temp = aux;
+                aux->anterior->proximo = aux-> proximo;
+                aux->proximo->anterior = aux-> anterior;
+                free(temp);
+        }
+    }
 
 
 }
