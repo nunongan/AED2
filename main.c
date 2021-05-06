@@ -1,10 +1,15 @@
+//==================================================== INCLUDES ===============================================================
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
-int nParts = 0;
+// ============================================================================================================================
+
+int contaPecasStock = 0; // -> Variavel global para a função totalPecasStock();
 
 //==================================================== INICIALIZAR FUNÇOES ====================================================
 
@@ -17,10 +22,12 @@ void alterarStockPeca();
 void removerPecasClasse();
 void removerSetsTema();
 void adicaoStockIdConjunto();
-void construirConstruirStockExistente();
+void construirComBaseStockExistente();
 void menu();
 
-// ==================================================== STRUCTS ====================================================
+// =======================================================================================================================
+
+// ==================================================== STRUCTS ==========================================================
 
 typedef struct sets{
     
@@ -54,9 +61,9 @@ typedef struct parts_sets{
 
 } PartsSets;
 
-// ==================================================================================================================
+// =======================================================================================================================
 
-// ===================================================== LISTS ======================================================
+// ===================================================== CRIAR LISTS ======================================================
 
 Sets * criarListaSets(char * set_num, char * set_nome, int set_ano, char * set_tema){
 
@@ -85,7 +92,7 @@ Part * criarListaParts(char *part_num, char * part_nome, char * part_classe, int
     list->ultimo = list;
     list->primeiro = list;
 
-    nParts += part_stock;
+    contaPecasStock += part_stock;
 
     return list;
 }
@@ -104,6 +111,9 @@ PartsSets *criarListaPartSets(char *psSet_num, int quantidade, char * psPart_num
 
     return list;
 }
+// =======================================================================================================================
+
+// ===================================================== PRINT LISTS =====================================================
 
 Sets * Inserir_Sets (Sets * list, char *set_id, char * set_nome, int set_ano, char * set_tema){
 
@@ -146,11 +156,15 @@ PartsSets * Inserir_PartSets(PartsSets * list, char * psSet_num, int quantidade,
 
 }
 
-// ==================================================================================================================
+// =======================================================================================================================
+
+// ===================================================== LOAD FILES ======================================================
 
 Sets * setsLista;
 Part * partsLista;
 PartsSets * partSetLista;
+
+
 
 Sets *carregarSets(){
 
@@ -290,6 +304,9 @@ PartsSets *carregarPartsSets(){
         return PartsSetsLista;
 }
 
+// =======================================================================================================================
+
+// ===================================================== FUNCTIONS =======================================================
 
 void listarConjuntoDeDeterminadoTema(){
 
@@ -297,7 +314,7 @@ void listarConjuntoDeDeterminadoTema(){
 
     char tema[500];
 
-    printf("Introduza o tema: ");
+    printf("Introduza o tema do conjunto: ");
     gets(tema);
 
     Sets *aux =setsLista;
@@ -315,6 +332,12 @@ void listarConjuntoDeDeterminadoTema(){
     aux= aux->proximo;
     }
 
+    printf("\n===================================================");
+    printf("\n\nPressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
+
 }
 
 void listarPecasNumDeterminadoConjunto(){
@@ -325,13 +348,13 @@ void listarPecasNumDeterminadoConjunto(){
 
     getchar();
 
-    printf("Introduza o conjunto pretendido:\n");
+    printf("Introduza o ID do conjunto pretendido:\n");
     printf("Resposta: ");
     gets(codConjunto);
 
 
     
-    printf("Introduza o tipo da peca.\n");
+    printf("Introduza a classe da peca.\n");
     printf("Resposta: ");
     gets(classe);
 
@@ -349,7 +372,6 @@ void listarPecasNumDeterminadoConjunto(){
                 if(strcmp(aux2->part_num, aux->psPart_num) == 0 && strcmp(aux2->part_classe, classe) == 0) {
         
                 printf("%s\n", aux->psPart_num);
-
                 
                 }
                 aux2 = aux2->proximo;
@@ -358,6 +380,13 @@ void listarPecasNumDeterminadoConjunto(){
         }
         aux = aux->proximo;
     }
+
+
+    printf("\n===================================================");
+    printf("\n\nPressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
 }
 
 void pecasNecessariasParaConstruir(){ 
@@ -366,7 +395,7 @@ void pecasNecessariasParaConstruir(){
 
     getchar();
 
-    printf("Insira o conjunto: ");
+    printf("Insira o ID do conjunto: ");
     gets(codConjunto);
 
     Part * aux1 = partsLista; 
@@ -391,11 +420,23 @@ void pecasNecessariasParaConstruir(){
         }
         aux2 = aux2->proximo;
     }
+
+    printf("\n===================================================");
+    printf("\n\nPressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
 }
 
 void totalPecasStock(){
 
-    printf("\n%d e o numero total de pecas em stock.",nParts);
+    printf("\n%d e o numero total de pecas em stock.",contaPecasStock);
+
+    printf("\n===================================================");
+    printf("\n\nPressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
 
 }
 
@@ -405,7 +446,7 @@ void pecasIncluidasNumConjunto(){
 
     getchar();
 
-    printf("Introduza o Conjunto: ");
+    printf("Introduza o ID do conjunto: ");
     gets(codConjunto);
 
     PartsSets * aux = partSetLista;
@@ -424,6 +465,12 @@ void pecasIncluidasNumConjunto(){
 
     printf("\n\nTotal de pecas: %d",total);
 
+    printf("\n===================================================");
+    printf("\n\nPressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
+
 }
 
 void alterarStockPeca(){
@@ -433,7 +480,7 @@ void alterarStockPeca(){
 
     getchar();
 
-    printf("Digite o codigo da peca: ");
+    printf("Digite o ID da peca: ");
     gets(codPeca);
 
     Part * aux = partsLista;
@@ -448,6 +495,13 @@ void alterarStockPeca(){
 
     }
 
+    printf("\n===================================================");
+    printf("Stock Alterado.\n");
+    printf("Pressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
+
 
 }
 
@@ -459,7 +513,7 @@ void removerPecasClasse(){
 
     getchar();
 
-    printf("Introduza a classe que deseja remover: ");
+    printf("Introduza a classe da peca que deseja remover: ");
     gets(temp_class);
 
     while (aux){
@@ -474,6 +528,7 @@ void removerPecasClasse(){
         aux = aux->proximo;
     }
 
+    printf("\n===================================================");
     printf("Pecas removidas com sucesso da classe %s.\n",temp_class);
     printf("Pressione qualquer tecla para retornar ao menu.\n");
     getchar();
@@ -488,7 +543,7 @@ void removerSetsTema(){
 
     getchar();
 
-    printf("Introduza o tema: ");
+    printf("Introduza o tema do conjunto: ");
     gets(temp_tema);
 
     Sets * aux = setsLista;
@@ -505,6 +560,7 @@ void removerSetsTema(){
         aux = aux->proximo;
     }
 
+    printf("\n===================================================");
     printf("Conjunto removido com sucesso do tema.\n");
     printf("Pressione qualquer tecla para retornar ao menu.\n");
     system("pause");
@@ -518,7 +574,7 @@ void adicaoStockIdConjunto(){
 
     getchar();
 
-    printf("Introduza o codigo do conjunto: ");
+    printf("Introduza o ID do conjunto: ");
     gets(codConjunto);
     printf("\n\nQual sera o novo stock: ");
     scanf("%d", &quantidade);
@@ -544,37 +600,78 @@ void adicaoStockIdConjunto(){
         aux1 = aux1->proximo;
     }
 
+    printf("\n===================================================");
+    printf("Stock Adicionado.\n");
+    printf("Pressione qualquer tecla para voltar ao menu...\n");
+    getchar();
+    system("cls || clear");
+    menu();
 
 }
 
-void construirConstruirStockExistente()
-{
+void construirComBaseStockExistente(){
 
-    PartsSets * aux = partSetLista;
-    Part * aux1 = partsLista;
-    Sets * aux2 = setsLista;
+    getchar();
+    Sets * aux = setsLista->primeiro;
+    int contPerSet, contPecasSetStock, contador;
+    contador = 0;
+    bool verificar_possibilidade = false;
 
-
-    while(aux1)
+    while(aux)
     {
-
-        while(aux)
+        PartsSets * aux1 = partSetLista->primeiro;
+        contPerSet = 0;
+        contPecasSetStock = 0;
+        verificar_possibilidade = false;
+        
+        while(aux1)
         {
-            if(strcmp(aux1->part_num, aux->psPart_num) == 0)
+            if(verificar_possibilidade == false)
             {
-                if(aux1->part_stock < aux->quantidade)
-                {
-                    for (; aux2; aux2->proximo)
+                if(strcmp(aux->set_num, aux1->psSet_num) == 0){
+
+                    Part * aux2 = partsLista->primeiro;
+                
+                    while(aux2)
                     {
-                        printf("Deltar da struckt  -> %s",aux2->set_num);
-                    }
+                        if(strcmp(aux1->psPart_num, aux2->part_num) == 0)
+                        {
+                            contPerSet++;
+
+                            if(aux1->quantidade <= aux2->part_stock)
+                            {
+                                contPecasSetStock++;
+                            }
+                            else
+                            {
+                                verificar_possibilidade = true;
+                            }
+
+                        }
+                        aux2 = aux2->proximo;
+                    } 
                 }
             }
-            aux = aux->proximo;   
+            else
+            {
+                break;
+            }
+            aux1 = aux1->proximo;    
         }
-        aux1 = aux1->proximo;
+        if(contPerSet == contPecasSetStock)
+        {
+            contador++;
+            printf("%d Set: %s\n", contador, aux->set_nome);
+        }
+        aux = aux->proximo;
     }
-        
+
+    printf("\n===================================================");
+    printf("Pressione qualquer tecla para voltar ao menu...");
+    getchar();
+    system("cls || clear");
+    menu();
+    
 }
 
 void menu(){
@@ -661,7 +758,7 @@ void menu(){
 
         system("cls || clear");
 
-        construirConstruirStockExistente();
+        construirComBaseStockExistente();
 
         break;
 
@@ -709,15 +806,18 @@ void menu(){
     }
 }
 
+// =======================================================================================================================
+
+// ===================================================== MAIN =======================================================
+
 void main(){
 
     setsLista = carregarSets();
-    printf("a");
     partsLista = carregarParts();
-    printf("b");
     partSetLista = carregarPartsSets();
-    printf("c");
     menu();
     
-
 }
+
+// =======================================================================================================================
+
