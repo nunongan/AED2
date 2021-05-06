@@ -547,39 +547,34 @@ void adicaoStockIdConjunto(){
 
 }
 
-void construirConstruirStockExistente(){
+void construirConstruirStockExistente()
+{
 
     PartsSets * aux = partSetLista;
     Part * aux1 = partsLista;
     Sets * aux2 = setsLista;
 
-    while (aux){
 
-        
+    while(aux1)
+    {
 
-        while(aux1){
-
-            if(strcmp(aux->psPart_num,aux1->part_num)){
-
-                if(aux1->part_stock >= aux->quantidade){
-                    
-                    aux2 = aux2->primeiro;
-
-                    while(aux2){
-
-                        if(strcmp(aux->psSet_num,aux2->set_num)){
-
-                            printf("\n%s",aux->psSet_num);
-                            break;
-                        }
-                        aux2 = aux2->proximo;
+        while(aux)
+        {
+            if(strcmp(aux1->part_num, aux->psPart_num) == 0)
+            {
+                if(aux1->part_stock < aux->quantidade)
+                {
+                    for (; aux2; aux2->proximo)
+                    {
+                        printf("Deltar da struckt  -> %s",aux2->set_num);
                     }
                 }
             }
-            aux1 = aux1->proximo;
+            aux = aux->proximo;   
         }
-        aux = aux->proximo;
+        aux1 = aux1->proximo;
     }
+        
 }
 
 void menu(){
